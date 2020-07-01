@@ -1,7 +1,16 @@
 const express = require('express')
 const { response } = require('express')
+
 const app = express()
+
 app.use(express.json())
+app.use((request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+})
 
 let persons = [
   {
@@ -30,13 +39,20 @@ app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  persons = persons.filter(p => p.id !== id)
+  res.status(204).end()
+})
+
 app.get('/api/persons/:id', (req, res) => {
-  const id = req.params.id
-  const person = persons.find(p => p.id === Number(id))
-  if (person)
+  const id = Number(req.params.id)
+  const person = persons.find(p => p.id === id)
+  if (person) {
     res.json(person)
-  else
-    res.status(404).end() 
+  } else {
+    res.status(404).end()
+  }
 })
 
 app.get('/info', (req, res) => {
