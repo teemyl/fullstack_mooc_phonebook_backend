@@ -35,8 +35,19 @@ let persons = [
   },
 ]
 
+const generateId = () => {
+  return Math.floor(Math.random() * 100000)
+}
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+app.post('/api/persons', (req, res) => {
+  const person = req.body
+  person.id = generateId()
+  persons = persons.concat(person)
+  res.json(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
