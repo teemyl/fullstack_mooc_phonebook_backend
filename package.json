@@ -1,0 +1,27 @@
+{
+  "name": "fullstack_mooc_phonebook_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teemyl/fullstack_mooc_phonebook_backend.git"
+  },
+  "author": "Teemu Myllylä",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/teemyl/fullstack_mooc_phonebook_backend/issues"
+  },
+  "homepage": "https://github.com/teemyl/fullstack_mooc_phonebook_backend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
