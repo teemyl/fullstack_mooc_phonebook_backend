@@ -45,6 +45,14 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const person = req.body
+
+  if (!person.name)
+    return res.status(400).json({ error: 'Name missing'})
+  else if (!person.number)
+    return res.status(400).json({ error: 'Number missing'})
+  else if(persons.find(p => p.name === person.name))
+    return res.status(400).json({ error: 'Name must be unique'})
+
   person.id = generateId()
   persons = persons.concat(person)
   res.json(person)
