@@ -16,15 +16,24 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     console.log('error connecting to MongoDB:', error.message)
   })
 
+const minDigitValidator = s => {
+  return (s.match(/[0-9]+/).join().length >= 8)
+}
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
+    minlength: 3,
     required: true,
     unique: true
   },
   number: {
     type: String,
     required: true,
+    validate: {
+      validator: minDigitValidator,
+      message: props => 'phone number must have at least 8 digits'
+    }
   }
 })
 
