@@ -17,7 +17,8 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   })
 
 const minDigitValidator = s => {
-  return (s.match(/[0-9]+/).join().length >= 8)
+  console.log(s.match(/[0-9]+/g).join().length)
+  return (s.match(/[0-9]+/g).join().length >= 8)
 }
 
 const personSchema = new mongoose.Schema({
