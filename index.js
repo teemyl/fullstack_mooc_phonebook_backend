@@ -17,13 +17,15 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 
-app.get('/api/persons', (req, res) => {
-  Person.find({}).then(query => {
-    res.json(query)
-  })
+app.get('/api/persons', (req, res, next) => {
+  Person.find({})
+    .then(query => {
+      res.json(query)
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if (!body.name)
@@ -36,9 +38,11 @@ app.post('/api/persons', (req, res) => {
     number: body.number
   })
 
-  person.save().then(savedPerson => {
-    res.json(savedPerson)
-  })
+  person.save()
+    .then(savedPerson => {
+      res.json(savedPerson)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -70,12 +74,14 @@ app.put('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.get('/info', (req, res) => {
-  Person.find({}).then(query => {
-    const lenInfo = `<p>Phonebook has info for ${ query.length } people<p>`
-    const timeInfo = `<p>${ new Date() }<p>`
-    res.send(`${ lenInfo }${ timeInfo }`)
-  })
+app.get('/info', (req, res, next) => {
+  Person.find({})
+    .then(query => {
+      const lenInfo = `<p>Phonebook has info for ${ query.length } people<p>`
+      const timeInfo = `<p>${ new Date() }<p>`
+      res.send(`${ lenInfo }${ timeInfo }`)
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (req, res) => {
@@ -85,7 +91,11 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted parameters' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
   next(error)
 }
 
