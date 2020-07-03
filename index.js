@@ -16,32 +16,29 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
-persons = []
-
-const generateId = () => {
-  return Math.floor(Math.random() * 100000)
-}
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(query => {
-    persons = persons.concat(query)
-    res.json(persons)
+    res.json(query)
   })
 })
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body
+  const body = req.body
 
-  if (!person.name)
+  if (!body.name)
     return res.status(400).json({ error: 'Name missing'})
-  else if (!person.number)
+  else if (!body.number)
     return res.status(400).json({ error: 'Number missing'})
-  else if(persons.find(p => p.name === person.name))
-    return res.status(400).json({ error: 'Name must be unique'})
 
-  person.id = generateId()
-  persons = persons.concat(person)
-  res.json(person)
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    res.json(savedPerson)
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
