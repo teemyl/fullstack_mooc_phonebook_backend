@@ -1,7 +1,11 @@
+require('dotenv').config()
+
 const express = require('express')
 const { response } = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+
+const Person = require('./models/person')
 
 const app = express()
 
@@ -12,35 +16,17 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
-let persons = [
-  {
-    id: 0,
-    name: "Teemu Mahanne",
-    number: "040-123123"
-  },
-  {
-    id: 1,
-    name: "John Smith",
-    number: "040-234234"
-  },
-  {
-    id: 2,
-    name: "David Brown",
-    number: "12-23-34-456"
-  },
-  {
-    id: 3,
-    name: "Leeroy Jenkins",
-    number: "024-680-86420"
-  },
-]
+persons = []
 
 const generateId = () => {
   return Math.floor(Math.random() * 100000)
 }
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person.find({}).then(query => {
+    persons = persons.concat(query)
+    res.json(persons)
+  })
 })
 
 app.post('/api/persons', (req, res) => {
