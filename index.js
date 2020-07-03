@@ -71,9 +71,11 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 app.get('/info', (req, res) => {
-  const lenInfo = `<p>Phonebook has info for ${ persons.length } people<p>`
-  const timeInfo = `<p>${ new Date() }<p>`
-  res.send(`${ lenInfo }${ timeInfo }`)
+  Person.find({}).then(query => {
+    const lenInfo = `<p>Phonebook has info for ${ query.length } people<p>`
+    const timeInfo = `<p>${ new Date() }<p>`
+    res.send(`${ lenInfo }${ timeInfo }`)
+  })
 })
 
 const unknownEndpoint = (req, res) => {
