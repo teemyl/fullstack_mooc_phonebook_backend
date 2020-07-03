@@ -41,7 +41,7 @@ app.post('/api/persons', (req, res) => {
   })
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then(result => {
       res.status(204).end()
@@ -58,6 +58,10 @@ app.get('/api/persons/:id', (req, res, next) => {
         res.status(404).end()
     })
     .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+
 })
 
 app.get('/info', (req, res) => {
